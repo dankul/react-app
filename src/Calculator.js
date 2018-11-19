@@ -10,12 +10,17 @@ class Calculator extends Component {
     	super(props);
 	    this.state = {
             result: 0,
-            history: {}
+            history: {},
+            setAddition: {},
+            setSubtraction: {},
+            setDivision: {},
+            setMultiplication: {},
         };
 
         this.onResult = this.onResult.bind(this);
         this.renderHistory = this.renderHistory.bind(this);
         this.clearHistory = this.clearHistory.bind(this);
+        this.reCalc = this.reCalc.bind(this);
   	}
 
   	onResult(result) {
@@ -25,17 +30,42 @@ class Calculator extends Component {
 		})
 	}
 
+	clearHistory() {
+		this.setState({history: {}})
+	}
+
+    reCalc(historyId){
+		this.setState({result: this.state.history[historyId].result})
+		switch (this.state.history[historyId].mathSign) {
+			case "+":
+				this.setState({setAddition: this.state.history[historyId]});
+				break;
+			case "-":
+				this.setState({setSubtraction: this.state.history[historyId]});
+				break;
+			case "/":
+				this.setState({setDivision: this.state.history[historyId]});
+				break;
+			case "*":
+				this.setState({setMultiplication: this.state.history[historyId]});
+				break;
+			default:
+				console.log("Error! No math symbol does not match.")
+			}
+		}
+
     renderHistory() {
-		return (
-			Object.keys(this.state.history).map((historyId) => {
-				return (
-					<div
-						key={historyId}
-						style={{display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItem: 'center'}}
-					>
-						<div style={{marginRight: 20}}>
-							{this.state.history[historyId].id}
-						</div>
+        return (
+            Object.keys(this.state.history).map((historyId) => {
+                return (
+                    <div
+                        key={historyId}
+                        style={{display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItem: 'center'}}
+                        onClick={() => this.reCalc(historyId)}
+                    >
+                        <div style={{marginRight: 20}}>
+                            {this.state.history[historyId].id}
+                        </div>
                         <div style={{marginRight: 20}}>
                             {this.state.history[historyId].a}
                         </div>
@@ -51,26 +81,19 @@ class Calculator extends Component {
                         <div style={{marginRight: 20}}>
                             {this.state.history[historyId].result}
                         </div>
-
-					</div>
-				)
-			})
-		)
-	}
-
-	clearHistory() {
-		this.setState({history: {}})
-	}
+                    </div>
+                )
+            })
+        )
+    }
 
 	render() {
-		console.log(this.state.history);
-		// console.log('render() {, this.state.history', this.state.history);
 		return (
 			<div>
-				<Addition onResult={this.onResult} />
-                <Subtraction onResult={this.onResult} onHistory={this.onHistory} />
-                <Division onResult={this.onResult} />
-                <Multiplication onResult={this.onResult} />
+				<Addition onResult={this.onResult} reCalc={this.state.setAddition} />
+                <Subtraction onResult={this.onResult} reCalc={this.state.setSubtraction} />
+                <Division onResult={this.onResult} reCalc={this.state.setDivision} />
+                <Multiplication onResult={this.onResult} reCalc={this.state.setMultiplication} />
                 <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItem: 'center'}}>Result: {this.state.result}</div>
                 <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItem: 'center'}}>
 					<p>History:</p>

@@ -11,6 +11,12 @@ export default class Division extends Component {
         this.division = this.division.bind(this);
     }
 
+    componentWillReceiveProps(nextProps) {
+        if(Object.keys(nextProps.reCalc).length > 0) (
+            this.setState({a: this.props.reCalc.a, b: this.props.reCalc.b })
+        );
+    }
+
     division() {
         this.props.onResult({
             id: Date.now(),

@@ -9,7 +9,12 @@ export default class Multiplication extends Component {
         };
 
         this.multiplication = this.multiplication.bind(this);
-        this.onClear = this.onClear.bind(this);
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if(Object.keys(nextProps.reCalc).length > 0) (
+            this.setState({a: this.props.reCalc.a, b: this.props.reCalc.b })
+        );
     }
 
     multiplication() {

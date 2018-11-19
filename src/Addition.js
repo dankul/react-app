@@ -11,6 +11,12 @@ export default class Addition extends Component {
         this.addition = this.addition.bind(this);
     }
 
+    componentWillReceiveProps(nextProps) {
+        if(Object.keys(nextProps.reCalc).length > 0) (
+            this.setState({a: this.props.reCalc.a, b: this.props.reCalc.b })
+        );
+    }
+
     addition() {
         this.props.onResult({
             id: Date.now(),

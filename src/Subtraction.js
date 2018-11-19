@@ -11,17 +11,20 @@ export default class Subtraction extends Component {
       this.subtraction = this.subtraction.bind(this);
   }
 
+  componentWillReceiveProps(nextProps) {
+      if(Object.keys(nextProps.reCalc).length > 0) (
+        this.setState({a: this.props.reCalc.a, b: this.props.reCalc.b })
+      );
+    }
   subtraction() {
-        this.props.onResult({
-            id: Date.now(),
-            a: Number.parseInt(this.state.a),
-            b: Number.parseInt(this.state.b),
-            mathSign: "-",
-            result: Number.parseInt(this.state.a) - Number.parseInt(this.state.b)
-        });
-    };
-
-
+    this.props.onResult({
+        id: Date.now(),
+        a: Number.parseInt(this.state.a),
+        b: Number.parseInt(this.state.b),
+        mathSign: "-",
+        result: Number.parseInt(this.state.a) - Number.parseInt(this.state.b)
+    });
+   };
 
   onClear() {
    this.setState({
