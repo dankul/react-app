@@ -12,9 +12,9 @@ export default class Subtraction extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-      if(Object.keys(nextProps.reCalc).length > 0) (
-        this.setState({a: this.props.reCalc.a, b: this.props.reCalc.b })
-      );
+      if(Object.keys(nextProps.reCalc).length > 0) {
+        this.setState({a: nextProps.reCalc.a, b: nextProps.reCalc.b })
+      }
     }
   subtraction() {
     this.props.onResult({

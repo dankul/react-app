@@ -12,9 +12,9 @@ export default class Addition extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if(Object.keys(nextProps.reCalc).length > 0) (
-            this.setState({a: this.props.reCalc.a, b: this.props.reCalc.b })
-        );
+        if(Object.keys(nextProps.reCalc).length > 0) {
+            this.setState({a: nextProps.reCalc.a, b: nextProps.reCalc.b })
+        }
     }
 
     addition() {
@@ -25,7 +25,7 @@ export default class Addition extends Component {
             mathSign: "+",
             result: Number.parseInt(this.state.a) + Number.parseInt(this.state.b)
         });
-    };
+    }
 
     onClear() {
         this.setState({

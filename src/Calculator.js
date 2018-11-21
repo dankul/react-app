@@ -24,35 +24,53 @@ class Calculator extends Component {
   	}
 
   	onResult(result) {
+	    let history = {...this.state.history, [result.id]: result};
+
 		this.setState({
 			result: result.result,
-            history: {...this.state.history, [result.id]: result}
-		})
+            history
+		});
+
+		this.reCalc(result.id, history);
 	}
 
 	clearHistory() {
-		this.setState({history: {}})
+		this.setState({
+            history: {},
+            setAddition: {},
+            setSubtraction: {},
+            setDivision: {},
+            setMultiplication: {},
+		})
 	}
 
-    reCalc(historyId){
-		this.setState({result: this.state.history[historyId].result})
-		switch (this.state.history[historyId].mathSign) {
+    reCalc(historyId, history){
+		this.setState({
+            result: history[historyId].result,
+            setAddition: {},
+            setSubtraction: {},
+            setDivision: {},
+            setMultiplication: {},
+        });
+
+		switch (history[historyId].mathSign) {
 			case "+":
-				this.setState({setAddition: this.state.history[historyId]});
+				this.setState({setAddition: history[historyId]});
 				break;
 			case "-":
-				this.setState({setSubtraction: this.state.history[historyId]});
+				this.setState({setSubtraction: history[historyId]});
 				break;
 			case "/":
-				this.setState({setDivision: this.state.history[historyId]});
+				this.setState({setDivision: history[historyId]});
 				break;
 			case "*":
-				this.setState({setMultiplication: this.state.history[historyId]});
+				this.setState({setMultiplication: history[historyId]});
 				break;
 			default:
 				console.log("Error! No math symbol does not match.")
-			}
-		}
+        }
+        console.log("reCalc(historyId, history){, this.state", this.state);
+    }
 
     renderHistory() {
         return (
@@ -61,7 +79,7 @@ class Calculator extends Component {
                     <div
                         key={historyId}
                         style={{display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItem: 'center'}}
-                        onClick={() => this.reCalc(historyId)}
+                        onClick={() => this.reCalc(historyId, this.state.history)}
                     >
                         <div style={{marginRight: 20}}>
                             {this.state.history[historyId].id}
