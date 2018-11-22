@@ -13,7 +13,7 @@ export default class Addition extends Component {
 
     componentWillReceiveProps(nextProps) {
         if(Object.keys(nextProps.reCalc).length > 0) {
-            this.setState({a: nextProps.reCalc.a, b: nextProps.reCalc.b })
+            this.setState({a: nextProps.reCalc.a, b: nextProps.reCalc.b });
         }
     }
 
