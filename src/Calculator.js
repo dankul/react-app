@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
+import readXlsFile from 'read-excel-file';
 import Addition from './Addition';
 import Subtraction from './Subtraction';
 import Division from './Division.js';
 import Multiplication from './Multiplication';
+import Export from './Export';
 import './Calc.css';
 
 // const history = {"1542882586796":{"id":1542882586796,"a":3,"b":33,"mathSign":"*","result":99},"1542882587194":{"id":1542882587194,"a":3,"b":3,"mathSign":"/","result":1},"1542882587565":{"id":1542882587565,"a":22,"b":2,"mathSign":"-","result":20},"1542882587949":{"id":1542882587949,"a":11,"b":1,"mathSign":"+","result":12}};
@@ -13,6 +15,8 @@ class Calculator extends Component {
 	    this.state = {
             result: 0,
             history: {},
+            xlsHistory: [],
+            setImport: [],
             sorting: "asc",
             setAddition: {},
             setSubtraction: {},
@@ -24,9 +28,36 @@ class Calculator extends Component {
         this.renderHistory = this.renderHistory.bind(this);
         this.clearHistory = this.clearHistory.bind(this);
         this.reCalc = this.reCalc.bind(this);
-        this.sortingsHistory = this.sortingsHistory.bind(this);
+        this.sortingHistory = this.sortingHistory.bind(this);
         this.clearSetParam = this.clearSetParam.bind(this);
+        this.getXlsHistory = this.getXlsHistory.bind(this);
+        this.setHistory = this.setHistory.bind(this);
   	}
+
+    getXlsHistory() {
+        const input = document.getElementById('input');
+
+	    readXlsFile(input.files[0]).then((rows) => {
+            let xlsHistory = this.setHistory(rows);
+            console.log('getXlsHistory() {', xlsHistory);
+            this.setState({xlsHistory});
+        });
+    }
+
+    setHistory(xlsHistory) {
+	    let paramList = [(a, b) => {return a + b}, (a, b) => {return a - b}, (a, b) => {return a * b}, (a, b) => {return a / b} ];
+        let param;
+        param = Math.round(Math.random() * (3 - 0) * 0);
+	    let historyList = [];
+
+	    console.log('setHistory() {', xlsHistory );
+
+        xlsHistory.forEach(function (val) {
+            historyList[historyList.length] = {a: val[0], b: val[1], result: paramList[param](val[0], val[1])};
+        });
+
+        return historyList;
+    }
 
   	onResult(result) {
 	    let history = {...this.state.history, [result.id]: result};
@@ -39,7 +70,7 @@ class Calculator extends Component {
 		this.reCalc(result.id, history);
 	}
 
-    sortingsHistory() {
+    sortingHistory() {
 	    if(this.state.sorting === "asc") {
             this.setState({sorting: "desc"})
         } else {
@@ -63,8 +94,6 @@ class Calculator extends Component {
             result: 0,
             history: {},
 		});
-
-        this.clearSetParam();
 	}
 
     reCalc(historyId, history){
@@ -141,11 +170,14 @@ class Calculator extends Component {
                 <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItem: 'center'}}>Result: {+this.state.result.toFixed(2)}</div>
                 <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItem: 'center'}}>
 					<p>History:</p>
-                    <button onClick={() => this.sortingsHistory()}>Sorting</button>
+
 					{this.renderHistory()}
 				</div>
+                <button onClick={() => this.sortingHistory()}>Sorting</button>
 				<button onClick={() => this.clearHistory()}>Clear History</button>
-			</div>
+				<button onClick={() => this.getXlsHistory()}>Import History</button>
+                <Export xlsHistory={this.state.xlsHistory} />
+            </div>
 		);
 	}
 }
